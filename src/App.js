@@ -1,25 +1,47 @@
-import logo from './logo.svg';
+// In App.js
+
+import React, { useState } from 'react';
+import { Header } from './components/Header';
+import { Balance } from './components/Balance';
+import { IncomeExpenses } from './components/IncomeExpenses';
+import { TransactionList } from './components/TransactionList';
+import { AddTransaction } from './components/AddTransaction';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [transactions, setTransactions] = useState([]);
+
+  const addTransaction = (transaction) => {
+    setTransactions([...transactions, transaction]);
+  };
+
+  const calculateIncome = () => {
+    return transactions
+      .filter(transaction => transaction.amount > 0)
+      .reduce((acc, transaction) => acc + transaction.amount, 0);
+  };
+
+  const calculateExpense = () => {
+    return transactions
+      .filter(transaction => transaction.amount < 0)
+      .reduce((acc, transaction) => acc + transaction.amount, 0) * -1;
+  };
+
+  const calculateBalance = () => {
+    return transactions.reduce((acc, transaction) => acc + transaction.amount, 0);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header />
+      <div className="container">
+        <Balance balance={calculateBalance()} />
+        <IncomeExpenses transactions={transactions} />
+        <TransactionList transactions={transactions} />
+        <AddTransaction addTransaction={addTransaction} />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
