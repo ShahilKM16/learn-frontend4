@@ -1,7 +1,14 @@
-
 import React from 'react';
 
-export const IncomeExpenses = ({ income, expense }) => {
+export const IncomeExpenses = ({ transactions }) => {
+  const income = transactions
+    .filter(transaction => transaction.amount > 0)
+    .reduce((acc, transaction) => acc + transaction.amount, 0);
+
+  const expense = transactions
+    .filter(transaction => transaction.amount < 0)
+    .reduce((acc, transaction) => acc + transaction.amount, 0) * -1;
+
   return (
     <div className="inc-exp-container">
       <div>
