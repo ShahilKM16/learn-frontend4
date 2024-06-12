@@ -4,10 +4,12 @@ export const TransactionList = ({ transactions }) => {
   const [filter, setFilter] = useState('');
   const [total, setTotal] = useState(0);
 
-  // Calculate total amount for the selected type
+  // Calculate total amount for the filtered transactions
   const calculateTotal = () => {
     const filteredTransactions = transactions.filter(transaction => {
-      return transaction.type.toLowerCase().includes(filter.toLowerCase());
+      const textMatch = transaction.text.toLowerCase().includes(filter.toLowerCase());
+      const typeMatch = transaction.type.toLowerCase().includes(filter.toLowerCase());
+      return textMatch || typeMatch;
     });
 
     const totalAmount = filteredTransactions.reduce((acc, transaction) => {
@@ -17,15 +19,17 @@ export const TransactionList = ({ transactions }) => {
     return totalAmount;
   };
 
-  // Update total when filter changes
+  // Update total when filter or transactions change
   useEffect(() => {
     const totalAmount = calculateTotal();
     setTotal(totalAmount);
   }, [filter, transactions]);
 
-  // Filter transactions by type
+  // Filter transactions by text and type
   const filteredTransactions = transactions.filter(transaction => {
-    return transaction.type.toLowerCase().includes(filter.toLowerCase());
+    const textMatch = transaction.text.toLowerCase().includes(filter.toLowerCase());
+    const typeMatch = transaction.type.toLowerCase().includes(filter.toLowerCase());
+    return textMatch || typeMatch;
   });
 
   return (
@@ -36,7 +40,7 @@ export const TransactionList = ({ transactions }) => {
           type="text"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          placeholder="Filter by type..."
+          placeholder="Filter by text or type..."
         />
         <p>Total: ${total.toFixed(2)}</p>
       </div>
