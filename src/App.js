@@ -9,6 +9,7 @@ import './App.css';
 
 const App = () => {
   const [transactions, setTransactions] = useState([]);
+  
 
   const addTransaction = (transaction) => {
     setTransactions([...transactions, transaction]);
