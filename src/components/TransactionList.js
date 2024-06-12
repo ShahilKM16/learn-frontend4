@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-export const TransactionList = ({ transactions }) => {
+export const TransactionList = ({ transactions, updateTransactions }) => {
   const [filter, setFilter] = useState('');
   const [total, setTotal] = useState(0);
+  const [editTransaction, setEditTransaction] = useState(null);
+  const [editedText, setEditedText] = useState('');
+  const [editedAmount, setEditedAmount] = useState('');
 
   // Calculate total amount for the filtered transactions
   const calculateTotal = () => {
@@ -32,6 +35,25 @@ export const TransactionList = ({ transactions }) => {
     return textMatch || typeMatch;
   });
 
+  const handleEdit = (transaction) => {
+    setEditTransaction(transaction);
+    setEditedText(transaction.text);
+    setEditedAmount(transaction.amount.toString());
+  };
+
+  const handleSave = () => {
+    const updatedTransactions = transactions.map(transaction => {
+      if (transaction.id === editTransaction.id) {
+        return { ...transaction, text: editedText, amount: parseFloat(editedAmount) };
+      }
+      return transaction;
+    });
+    updateTransactions(updatedTransactions);
+    setEditTransaction(null);
+    setEditedText('');
+    setEditedAmount('');
+  };
+
   return (
     <>
       <h3>History</h3>
@@ -47,7 +69,18 @@ export const TransactionList = ({ transactions }) => {
       <ul className="list">
         {filteredTransactions.map(transaction => (
           <li className={transaction.amount < 0 ? 'minus' : 'plus'} key={transaction.id}>
-            {transaction.text} ({transaction.type}) <span>{transaction.amount < 0 ? '-' : '+'}${Math.abs(transaction.amount)}</span>
+            {editTransaction && editTransaction.id === transaction.id ? (
+              <div>
+                <input type="text" value={editedText} onChange={(e) => setEditedText(e.target.value)} />
+                <input type="number" value={editedAmount} onChange={(e) => setEditedAmount(e.target.value)} />
+                <button onClick={handleSave}>Save</button>
+              </div>
+            ) : (
+              <>
+                {transaction.text} ({transaction.type}) <span>{transaction.amount < 0 ? '-' : '+'}${Math.abs(transaction.amount)}</span>
+                <button onClick={() => handleEdit(transaction)}>Edit</button>
+              </>
+            )}
           </li>
         ))}
       </ul>
