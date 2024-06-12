@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 export const TransactionList = ({ transactions, updateTransactions }) => {
   const [filter, setFilter] = useState('');
   const [total, setTotal] = useState(0);
-  const [editTransaction, setEditTransaction] = useState(null);
+  const [editedTransaction, setEditedTransaction] = useState(null);
   const [editedText, setEditedText] = useState('');
   const [editedAmount, setEditedAmount] = useState('');
 
@@ -36,20 +36,20 @@ export const TransactionList = ({ transactions, updateTransactions }) => {
   });
 
   const handleEdit = (transaction) => {
-    setEditTransaction(transaction);
+    setEditedTransaction(transaction);
     setEditedText(transaction.text);
     setEditedAmount(transaction.amount.toString());
   };
 
   const handleSave = () => {
     const updatedTransactions = transactions.map(transaction => {
-      if (transaction.id === editTransaction.id) {
+      if (transaction.id === editedTransaction.id) {
         return { ...transaction, text: editedText, amount: parseFloat(editedAmount) };
       }
       return transaction;
     });
     updateTransactions(updatedTransactions);
-    setEditTransaction(null);
+    setEditedTransaction(null);
     setEditedText('');
     setEditedAmount('');
   };
@@ -69,7 +69,7 @@ export const TransactionList = ({ transactions, updateTransactions }) => {
       <ul className="list">
         {filteredTransactions.map(transaction => (
           <li className={transaction.amount < 0 ? 'minus' : 'plus'} key={transaction.id}>
-            {editTransaction && editTransaction.id === transaction.id ? (
+            {editedTransaction && editedTransaction.id === transaction.id ? (
               <div>
                 <input type="text" value={editedText} onChange={(e) => setEditedText(e.target.value)} />
                 <input type="number" value={editedAmount} onChange={(e) => setEditedAmount(e.target.value)} />

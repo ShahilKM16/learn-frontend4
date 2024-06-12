@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { Balance } from './components/Balance';
@@ -10,10 +9,11 @@ import './App.css';
 const App = () => {
   const [transactions, setTransactions] = useState([]);
   
-// Function to update transactions
-const updateTransactions = (updatedTransactions) => {
-  setTransactions(updatedTransactions);
-};
+  // Function to update transactions
+  const updateTransactions = (updatedTransactions) => {
+    setTransactions(updatedTransactions);
+  };
+
   const addTransaction = (transaction) => {
     setTransactions([...transactions, transaction]);
   };
@@ -42,7 +42,8 @@ const updateTransactions = (updatedTransactions) => {
       <div className="content">
         <Balance balance={calculateBalance()} />
         <IncomeExpenses transactions={transactions} />
-        <TransactionList transactions={transactions} />
+        {/* Pass the updateTransactions function to TransactionList component */}
+        <TransactionList transactions={transactions} updateTransactions={updateTransactions} />
         <AddTransaction addTransaction={addTransaction} />
       </div>
     </div>
