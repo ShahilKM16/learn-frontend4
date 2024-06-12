@@ -9,7 +9,6 @@ import './App.css';
 
 const App = () => {
   const [transactions, setTransactions] = useState([]);
-  
 
   const addTransaction = (transaction) => {
     setTransactions([...transactions, transaction]);
@@ -30,6 +29,8 @@ const App = () => {
   const calculateBalance = () => {
     return transactions.reduce((acc, transaction) => acc + transaction.amount, 0);
   };
+
+  console.log(transactions); // Log the transactions array
 
   return (
     <div>

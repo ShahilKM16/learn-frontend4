@@ -1,17 +1,16 @@
 // src/components/AddTransaction.js
 import React, { useState } from 'react';
 
-export const AddTransaction = ({ addTransaction, categories }) => {
+export const AddTransaction = ({ addTransaction }) => {
   const [text, setText] = useState('');
   const [amount, setAmount] = useState('');
-  const [type, setType] = useState('income');
-  const [category, setCategory] = useState(categories ? categories[0] : ''); // Default to the first category
+  const [type, setType] = useState('income'); // Default to income
 
   const onSubmit = e => {
     e.preventDefault();
 
-    if (!text || !amount || !category) {
-      alert('Please enter text, amount, and select a category.');
+    if (!text || !amount) {
+      alert('Please enter both text and amount.');
       return;
     }
 
@@ -20,24 +19,18 @@ export const AddTransaction = ({ addTransaction, categories }) => {
       return;
     }
 
-    let parsedAmount = parseFloat(amount);
-    if (type === 'expense') {
-      parsedAmount *= -1;
-    }
-
     const newTransaction = {
       id: Math.floor(Math.random() * 100000000),
       text,
-      amount: parsedAmount,
-      category
+      amount: type === 'expense' ? -parseFloat(amount) : parseFloat(amount),
+      type // Set the type
     };
 
     addTransaction(newTransaction);
 
     setText('');
     setAmount('');
-    setType('income');
-    setCategory(categories ? categories[0] : ''); // Reset category to the first category
+    setType('income'); // Reset to default type after adding transaction
   };
 
   return (
@@ -51,14 +44,6 @@ export const AddTransaction = ({ addTransaction, categories }) => {
         <div className="form-control">
           <label htmlFor="amount">Amount</label>
           <input type="text" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="Enter amount..." />
-        </div>
-        <div className="form-control">
-          <label htmlFor="category">Category</label>
-          <select value={category} onChange={(e) => setCategory(e.target.value)}>
-            {categories && categories.map(category => (
-              <option key={category} value={category}>{category}</option>
-            ))}
-          </select>
         </div>
         <div className="form-control">
           <label htmlFor="type">Type</label>
