@@ -1,5 +1,4 @@
-// In App.js
-
+// App.js
 import React, { useState } from 'react';
 import { Header } from './components/Header';
 import { Balance } from './components/Balance';
@@ -33,8 +32,10 @@ const App = () => {
 
   return (
     <div>
-      <Header />
-      <div className="container">
+      <div className="header">
+        <Header />
+      </div>
+      <div className="content">
         <Balance balance={calculateBalance()} />
         <IncomeExpenses transactions={transactions} />
         <TransactionList transactions={transactions} />
