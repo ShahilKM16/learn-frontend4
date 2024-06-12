@@ -4,13 +4,14 @@ import React, { useState } from 'react';
 export const AddTransaction = ({ addTransaction, categories }) => {
   const [text, setText] = useState('');
   const [amount, setAmount] = useState('');
-  const [type, setType] = useState('income'); // New state for transaction type
+  const [type, setType] = useState('income');
+  const [category, setCategory] = useState(categories ? categories[0] : ''); // Default to the first category
 
   const onSubmit = e => {
     e.preventDefault();
 
-    if (!text || !amount) {
-      alert('Please enter both text and amount.');
+    if (!text || !amount || !category) {
+      alert('Please enter text, amount, and select a category.');
       return;
     }
 
@@ -21,21 +22,22 @@ export const AddTransaction = ({ addTransaction, categories }) => {
 
     let parsedAmount = parseFloat(amount);
     if (type === 'expense') {
-      parsedAmount *= -1; // Convert to negative for expenses
+      parsedAmount *= -1;
     }
 
     const newTransaction = {
       id: Math.floor(Math.random() * 100000000),
       text,
       amount: parsedAmount,
-      category: categories ? categories[0] : 'General' // Default category if not provided
+      category
     };
 
     addTransaction(newTransaction);
 
     setText('');
     setAmount('');
-    setType('income'); // Reset type to income
+    setType('income');
+    setCategory(categories ? categories[0] : ''); // Reset category to the first category
   };
 
   return (
@@ -49,6 +51,14 @@ export const AddTransaction = ({ addTransaction, categories }) => {
         <div className="form-control">
           <label htmlFor="amount">Amount</label>
           <input type="text" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="Enter amount..." />
+        </div>
+        <div className="form-control">
+          <label htmlFor="category">Category</label>
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            {categories && categories.map(category => (
+              <option key={category} value={category}>{category}</option>
+            ))}
+          </select>
         </div>
         <div className="form-control">
           <label htmlFor="type">Type</label>
